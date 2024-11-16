@@ -1,27 +1,19 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const Usuario = require('./Usuario');
-const Libro = require('./Libro');
+module.exports = (sequelize, DataTypes) => {
+    const Pedido = sequelize.define('Pedido', {
+        id_pedido: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        id_usuario: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'Usuarios', // Referencia a la tabla de usuarios
+                key: 'id_usuario',
+            },
+        },
+        // Otros atributos...
+    });
 
-const Pedido = sequelize.define('Pedido', {
-    id_pedido: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    fecha_pedido: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-    },
-    estado: {
-        type: DataTypes.ENUM('pagado', 'en proceso', 'completado'),
-        defaultValue: 'en proceso',
-    },
-});
-
-// Relacionar con Usuario y Libro
-Pedido.belongsTo(Usuario, { foreignKey: 'id_usuario' });
-Pedido.belongsTo(Libro, { foreignKey: 'id_libro' });
-
-module.exports = Pedido;
-//asd
+    return Pedido;
+};

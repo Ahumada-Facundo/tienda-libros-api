@@ -1,26 +1,26 @@
 const express = require('express');
-const sequelize = require('./config/database');
-const Usuario = require('./models/Usuario');
-const Libro = require('./models/Libro');
-const Pedido = require('./models/Pedido');
-const Resena = require('./models/Resena');
+const cors = require('cors');
+const { sequelize } = require('./models'); // Asegúrate de que sea './models', no './models/index'
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(cors());
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Bienvenido a la Tienda de Libros');
-});
+const authRoutes = require('./routes/authRoutes');
+const libroRoutes = require('./routes/libroRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes');
 
-// Verificar la conexión y las relaciones
-sequelize.authenticate()
+// Usar rutas
+app.use('/api/auth', authRoutes);
+app.use('/api/libros', libroRoutes);
+app.use('/api/pedidos', pedidoRoutes);
+
+sequelize.sync({ force: false }) // Para sincronizar con la base de datos
     .then(() => {
-        console.log('Conexión a la base de datos exitosa!');
-    })
-    .catch((error) => {
-        console.error('Error al conectar a la base de datos:', error);
+        console.log('Conexión a la base de datos exitosa');
+        app.listen(3000, () => {
+            console.log('Servidor escuchando en el puerto 3000');
+        });
+    }).catch((error) => {
+        console.error('Error de conexión a la base de datos:', error);
     });
-
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
