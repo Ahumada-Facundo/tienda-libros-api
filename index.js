@@ -1,26 +1,23 @@
 const express = require('express');
-const cors = require('cors');
-const { sequelize } = require('./models'); // Asegúrate de que sea './models', no './models/index'
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');  // Importa dotenv
 const authRoutes = require('./routes/authRoutes');
 const libroRoutes = require('./routes/libroRoutes');
-const pedidoRoutes = require('./routes/pedidoRoutes');
 
-// Usar rutas
+dotenv.config();  // Cargar variables de entorno
+
+const app = express();
+
+// Middleware para parsear el cuerpo de la solicitud en formato JSON
+app.use(express.json());
+
+// Usar las rutas de autenticación bajo el prefijo /api/auth
 app.use('/api/auth', authRoutes);
-app.use('/api/libros', libroRoutes);
-app.use('/api/pedidos', pedidoRoutes);
 
-sequelize.sync({ force: false }) // Para sincronizar con la base de datos
-    .then(() => {
-        console.log('Conexión a la base de datos exitosa');
-        app.listen(3000, () => {
-            console.log('Servidor escuchando en el puerto 3000');
-        });
-    }).catch((error) => {
-        console.error('Error de conexión a la base de datos:', error);
-    });
+// Usar las rutas de libros bajo el prefijo /api
+app.use('/api', libroRoutes);  // Esto permite acceder a las rutas de libros, como /api/libros
+
+// Puerto en el que escuchará el servidor
+app.listen(3000, () => {
+    console.log('Servidor escuchando en puerto 3000');
+});
