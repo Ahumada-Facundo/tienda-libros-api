@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { Usuario } = require('../models');  // Asegúrate de que esté importado el modelo Usuario
+const { Usuario } = require('../models');
 
 const loginController = async (req, res) => {
     try {
@@ -24,13 +24,13 @@ const loginController = async (req, res) => {
                 id_usuario: usuario.id_usuario,
                 nombre: usuario.nombre,
                 email: usuario.email,
-                rol: usuario.rol  // Aquí es donde añades el rol al payload
+                rol: usuario.rol
             },
             process.env.JWT_SECRET_KEY || 'mi_clave_secreta',
             { expiresIn: process.env.JWT_EXPIRATION_TIME || '1h' }
         );
 
-        // Enviar el token como respuesta
+        // Enviar el token
         res.json({ message: 'Autenticación exitosa', token });
     } catch (error) {
         console.error(error);

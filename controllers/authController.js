@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
 
         const token = jwt.sign(
             { id: usuario.id, nombreUsuario: usuario.nombreUsuario },
-            'secretKey', // Debes usar una clave más segura y almacenarla en variables de entorno
+            'secretKey',
             { expiresIn: '1h' }
         );
 

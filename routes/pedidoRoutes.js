@@ -1,23 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { Pedido } = require('../models'); // Importar desde 'models'
+const pedidoController = require('../controllers/pedidoController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-router.get('/', async (req, res) => {
-    try {
-        const pedidos = await Pedido.findAll();
-        res.json(pedidos);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Crear un nuevo pedido
+router.post('/', authMiddleware, pedidoController.createPedido);  // Cambié '/pedidos' a '/' ya que ya está definido el prefijo en index.js
 
-router.post('/', async (req, res) => {
-    try {
-        const nuevoPedido = await Pedido.create(req.body);
-        res.status(201).json(nuevoPedido);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Listar todos los pedidos
+router.get('/', authMiddleware, pedidoController.getPedidos);
+
+// Obtener pedido por ID
+router.get('/:id', authMiddleware, pedidoController.getPedidoById);
 
 module.exports = router;

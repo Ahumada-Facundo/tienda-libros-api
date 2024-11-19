@@ -1,49 +1,72 @@
-const { DataTypes } = require('sequelize');
-
-module.exports = (sequelize) => {
+// Libro.js
+module.exports = (sequelize, DataTypes) => {
     const Libro = sequelize.define('Libro', {
         id_libro: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
         },
         titulo: {
             type: DataTypes.STRING(200),
-            allowNull: false
+            allowNull: false,
         },
         autor: {
             type: DataTypes.STRING(150),
-            allowNull: false
+            allowNull: false,
         },
         genero: {
             type: DataTypes.STRING(100),
-            allowNull: true
+            allowNull: true,
         },
         precio: {
             type: DataTypes.DECIMAL(10, 2),
-            allowNull: false
+            allowNull: false,
         },
         descripcion: {
             type: DataTypes.TEXT,
-            allowNull: true
+            allowNull: true,
         },
         formato: {
             type: DataTypes.ENUM('PDF', 'ePub', 'Mobi'),
-            allowNull: false
+            allowNull: false,
         },
         stock: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
-            allowNull: false
+            allowNull: false,
         },
         fecha_publicacion: {
-            type: DataTypes.DATEONLY,
-            allowNull: true
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false,
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            allowNull: false,
         },
     }, {
-        timestamps: true,
-        tableName: 'Libros',
+        timestamps: false,
+        tableName: 'libros',
     });
 
-    return Libro;  // No olvides retornar el modelo
+    Libro.associate = (models) => {
+        Libro.belongsToMany(models.Pedido, {
+            through: models.PedidoLibro,
+            foreignKey: 'id_libro',
+            otherKey: 'id_pedido',
+            as: 'pedidos',
+        });
+
+        Libro.hasMany(models.Resena, {
+            foreignKey: 'id_libro',
+            as: 'resenas',
+        });
+    };
+
+    return Libro;
 };

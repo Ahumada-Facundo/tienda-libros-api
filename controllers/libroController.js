@@ -1,4 +1,3 @@
-// controllers/libroController.js
 const { Libro } = require('../models');
 
 const getAllLibros = async (req, res) => {
@@ -57,7 +56,7 @@ const createLibro = async (req, res) => {
     }
 };
 
-module.exports = createLibro;
+
 
 const updateLibro = async (req, res) => {
     try {

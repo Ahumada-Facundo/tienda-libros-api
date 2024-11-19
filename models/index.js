@@ -1,25 +1,38 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');  // Asegúrate de tener bien configurada la conexión
+const Sequelize = require('sequelize');
+require('dotenv').config();
+
+const sequelize = new Sequelize({
+    dialect: 'mysql',
+    host: process.env.DB_HOST,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+});
 
 // Importar los modelos
-const Usuario = require('./Usuario');
-const Libro = require('./Libro');
-const Resena = require('./Resena');
-const Pedido = require('./Pedido');
+const Usuario = require('./Usuario')(sequelize, Sequelize.DataTypes);
+const Libro = require('./Libro')(sequelize, Sequelize.DataTypes);
+const Pedido = require('./Pedido')(sequelize, Sequelize.DataTypes);
+const Resena = require('./Resena')(sequelize, Sequelize.DataTypes);
+const PedidoLibro = require('./PedidosLibros')(sequelize, Sequelize.DataTypes); // Añadido el modelo intermedio
 
-// Llamar a los modelos con sequelize y DataTypes
-const UsuarioModel = Usuario(sequelize, DataTypes);
-const LibroModel = Libro(sequelize, DataTypes);
-const ResenaModel = Resena(sequelize, DataTypes);
-const PedidoModel = Pedido(sequelize, DataTypes);
-
-
-
-// Exportar los modelos para usarlos en otros archivos
-module.exports = {
-    Usuario: UsuarioModel,
-    Libro: LibroModel,
-    Resena: ResenaModel,
-    Pedido: PedidoModel,
-    sequelize, // Para que puedas hacer uso de sequelize en otras partes
+//manejar las asociaciones
+const models = {
+    Usuario,
+    Libro,
+    Pedido,
+    Resena,
+    PedidoLibro,
 };
+
+// Definir las asociaciones entre los modelos
+Object.keys(models).forEach((modelName) => {
+    if (models[modelName].associate) {
+        models[modelName].associate(models);
+    }
+});
+
+
+models.sequelize = sequelize;
+
+module.exports = models;

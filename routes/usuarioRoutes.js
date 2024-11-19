@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Usuario } = require('../models'); // Importar desde 'models'
+const { Usuario } = require('../models');
 
 router.get('/', async (req, res) => {
     try {

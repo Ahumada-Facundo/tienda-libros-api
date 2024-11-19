@@ -1,4 +1,4 @@
-// models/Usuario.js
+// Usuario.js
 module.exports = (sequelize, DataTypes) => {
     const Usuario = sequelize.define('Usuario', {
         id_usuario: {
@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         fecha_registro: {
             type: DataTypes.DATE,
-            defaultValue: sequelize.NOW,
-            allowNull: true,
+            defaultValue: DataTypes.NOW,
+            allowNull: false,
         },
         rol: {
             type: DataTypes.ENUM('cliente', 'administrador'),
@@ -30,9 +30,22 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         },
     }, {
-        tableName: 'usuarios',
         timestamps: false,
+        tableName: 'Usuarios',
     });
+
+    Usuario.associate = (models) => {
+        Usuario.hasMany(models.Pedido, {
+            foreignKey: 'id_usuario',
+            as: 'pedidos',
+        });
+
+        Usuario.hasMany(models.Resena, {
+            foreignKey: 'id_usuario',
+            as: 'resenas',
+        });
+    };
 
     return Usuario;
 };
+

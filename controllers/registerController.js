@@ -1,4 +1,3 @@
-// controllers/registerController.js
 const { Usuario } = require('../models');
 const bcrypt = require('bcryptjs');
 
@@ -6,7 +5,7 @@ const registerController = async (req, res) => {
     try {
         const { nombre, email, contraseña, rol } = req.body;
 
-        // Verificar si el usuario ya existe
+
         const usuarioExistente = await Usuario.findOne({ where: { email } });
         if (usuarioExistente) {
             return res.status(400).json({ message: 'El correo ya está registrado.' });
@@ -15,7 +14,7 @@ const registerController = async (req, res) => {
         // Encriptar la contraseña
         const contraseñaEncriptada = await bcrypt.hash(contraseña, 10);
 
-        // Crear el nuevo usuario
+
         const nuevoUsuario = await Usuario.create({
             nombre,
             email,
