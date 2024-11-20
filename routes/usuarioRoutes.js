@@ -1,23 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { Usuario } = require('../models');
+const usuarioController = require('../controllers/usuarioController');
+const authMiddleware = require('../middlewares/authMiddleware');
+const adminMiddleware = require('../middlewares/adminMiddleware');
 
-router.get('/', async (req, res) => {
-    try {
-        const usuarios = await Usuario.findAll();
-        res.json(usuarios);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Obtener usuario por ID
+router.get('/:id_usuario', authMiddleware, adminMiddleware, usuarioController.getUsuarioById);
 
-router.post('/', async (req, res) => {
-    try {
-        const nuevoUsuario = await Usuario.create(req.body);
-        res.status(201).json(nuevoUsuario);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Actualizar usuario
+router.put('/:id_usuario', authMiddleware, usuarioController.updateUsuario);
+
+// Ruta para eliminar un usuario
+router.delete('/:id_usuario', authMiddleware, usuarioController.eliminarUsuario);
 
 module.exports = router;
