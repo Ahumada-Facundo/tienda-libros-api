@@ -21,34 +21,33 @@ const getLibroById = async (req, res) => {
     }
 };
 
-// Controlador para crear un libro
+
 const createLibro = async (req, res) => {
     try {
         const { titulo, autor, genero, precio, descripcion, formato, stock, fecha_publicacion } = req.body;
 
-        // Verificar que los campos requeridos estén presentes
+
         if (!titulo || !autor || !precio || !formato) {
             return res.status(400).json({ message: 'Faltan campos requeridos: titulo, autor, precio y formato son obligatorios.' });
         }
 
-        // Verificar que el formato sea válido
         if (!['PDF', 'ePub', 'Mobi'].includes(formato)) {
             return res.status(400).json({ message: 'Formato inválido. Debe ser uno de los siguientes: PDF, ePub, Mobi.' });
         }
 
-        // Crear el libro
+
         const nuevoLibro = await Libro.create({
             titulo,
             autor,
-            genero,  // Este campo es opcional
+            genero,
             precio,
-            descripcion,  // Este campo es opcional
+            descripcion,
             formato,
-            stock: stock || 0,  // Si no se pasa stock, se asigna 0 por defecto
+            stock: stock || 0,
             fecha_publicacion
         });
 
-        // Responder con el libro creado
+
         res.status(201).json({ message: 'Libro creado exitosamente', libro: nuevoLibro });
     } catch (error) {
         console.error('Error al crear el libro:', error);

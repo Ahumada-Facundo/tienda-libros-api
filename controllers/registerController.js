@@ -11,7 +11,7 @@ const registerController = async (req, res) => {
             return res.status(400).json({ message: 'El correo ya está registrado.' });
         }
 
-        // Encriptar la contraseña
+
         const contraseñaEncriptada = await bcrypt.hash(contraseña, 10);
 
 

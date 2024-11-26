@@ -9,14 +9,14 @@ const sequelize = new Sequelize({
     database: process.env.DB_NAME,
 });
 
-// Importar los modelos
+
 const Usuario = require('./Usuario')(sequelize, Sequelize.DataTypes);
 const Libro = require('./Libro')(sequelize, Sequelize.DataTypes);
 const Pedido = require('./Pedido')(sequelize, Sequelize.DataTypes);
 const Resena = require('./Resena')(sequelize, Sequelize.DataTypes);
 const PedidoLibro = require('./PedidosLibros')(sequelize, Sequelize.DataTypes); // Añadido el modelo intermedio
 
-//manejar las asociaciones
+
 const models = {
     Usuario,
     Libro,
@@ -25,7 +25,7 @@ const models = {
     PedidoLibro,
 };
 
-// Definir las asociaciones entre los modelos
+// Definir asociaciones entre modelos
 Object.keys(models).forEach((modelName) => {
     if (models[modelName].associate) {
         models[modelName].associate(models);

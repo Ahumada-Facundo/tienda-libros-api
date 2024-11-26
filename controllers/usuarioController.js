@@ -1,7 +1,7 @@
 const models = require('../models');
 const bcrypt = require('bcrypt');
 
-// Obtener el usuario por ID
+
 const getUsuarioById = async (req, res) => {
     try {
         const usuario = await models.Usuario.findByPk(req.params.id_usuario);
@@ -14,7 +14,7 @@ const getUsuarioById = async (req, res) => {
     }
 };
 
-// Actualizar usuario
+
 const updateUsuario = async (req, res) => {
     try {
         const { nombre, email, contraseña } = req.body;
@@ -24,7 +24,7 @@ const updateUsuario = async (req, res) => {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Si el email o contraseña se proporcionan, actualizarlos
+
         if (email) usuario.email = email;
         if (nombre) usuario.nombre = nombre;
         if (contraseña) usuario.contraseña = bcrypt.hashSync(contraseña, 10);
@@ -37,15 +37,15 @@ const updateUsuario = async (req, res) => {
     }
 };
 
-// Eliminar un usuario
+
 const eliminarUsuario = async (req, res) => {
-    const { id_usuario } = req.params;  // Cambiado de id a id_usuario para que coincida con la ruta
+    const { id_usuario } = req.params;
     console.log({ id_usuario });
 
     try {
         console.log(`Intentando eliminar el usuario con ID: ${id_usuario}`);
 
-        // Verificar si el usuario existe
+
         const usuario = await models.Usuario.findByPk(id_usuario);
 
         if (!usuario) {
@@ -53,14 +53,14 @@ const eliminarUsuario = async (req, res) => {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        // Verificar si el usuario que está haciendo la solicitud es el mismo que el de la cuenta
+
         if (req.user.id_usuario !== parseInt(id_usuario) && req.user.rol !== 'administrador') {
             console.log('El usuario no tiene permisos para eliminar este usuario');
             return res.status(403).json({ message: 'No tienes permisos para eliminar este usuario' });
         }
 
         console.log(`Eliminando usuario con ID: ${id_usuario}`);
-        // Eliminar al usuario
+
         await usuario.destroy();
 
         console.log(`Usuario con ID ${id_usuario} eliminado correctamente`);

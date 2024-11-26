@@ -1,4 +1,3 @@
-// Pedido.js
 module.exports = (sequelize, DataTypes) => {
     const Pedido = sequelize.define('Pedido', {
         id_pedido: {

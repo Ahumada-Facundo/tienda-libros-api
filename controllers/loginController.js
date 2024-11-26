@@ -6,19 +6,19 @@ const loginController = async (req, res) => {
     try {
         const { email, contraseña } = req.body;
 
-        // Verificar si el usuario existe
+
         const usuario = await Usuario.findOne({ where: { email } });
         if (!usuario) {
             return res.status(400).json({ message: 'El usuario no existe' });
         }
 
-        // Verificar la contraseña
+
         const validPassword = await bcrypt.compare(contraseña, usuario.contraseña);
         if (!validPassword) {
             return res.status(400).json({ message: 'Contraseña incorrecta' });
         }
 
-        // Generar el token JWT
+
         const token = jwt.sign(
             {
                 id_usuario: usuario.id_usuario,
@@ -30,7 +30,7 @@ const loginController = async (req, res) => {
             { expiresIn: process.env.JWT_EXPIRATION_TIME || '1h' }
         );
 
-        // Enviar el token
+
         res.json({ message: 'Autenticación exitosa', token });
     } catch (error) {
         console.error(error);

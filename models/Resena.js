@@ -1,4 +1,4 @@
-// Resena.js
+
 module.exports = (sequelize, DataTypes) => {
     const Resena = sequelize.define('Resena', {
         id_resena: {

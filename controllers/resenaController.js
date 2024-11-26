@@ -1,19 +1,19 @@
-// controllers/resenaController.js
+
 const models = require('../models');
 
-// Obtener todas las reseñas (opcionalmente filtradas por libro o usuario)
+
 const getResenas = async (req, res) => {
     try {
-        // Obtener todas las reseñas con la información del usuario (sin la contraseña)
+
         const resenas = await models.Resena.findAll({
             include: [{
                 model: models.Usuario,
-                as: 'usuario', // La asociación de usuario
+                as: 'usuario',
                 attributes: { exclude: ['contraseña', 'fecha_registro', 'rol', 'email'] }, // Excluir la columna 'contraseña'
             }, {
                 model: models.Libro,
-                as: 'libros', // La asociación de libro
-                attributes: ['id_libro', 'titulo'], // Solo los campos que necesitas del libro
+                as: 'libros',
+                attributes: ['id_libro', 'titulo'],
             }],
         });
 
@@ -25,7 +25,7 @@ const getResenas = async (req, res) => {
 };
 
 
-// Obtener una reseña por ID
+
 const getResenaById = async (req, res) => {
     try {
         const { id_resena } = req.params;
@@ -47,7 +47,7 @@ const getResenaById = async (req, res) => {
     }
 };
 
-// Crear una nueva reseña
+
 const createResena = async (req, res) => {
     const { id_libro, texto, calificacion } = req.body;
     const { id_usuario } = req.user;
@@ -75,7 +75,7 @@ const createResena = async (req, res) => {
     }
 };
 
-// Actualizar una reseña
+
 const updateResena = async (req, res) => {
     const { id_resena } = req.params;
     const { texto, calificacion } = req.body;
@@ -104,7 +104,7 @@ const updateResena = async (req, res) => {
     }
 };
 
-// Eliminar una reseña
+
 const deleteResena = async (req, res) => {
     const { id_resena } = req.params;
     const { id_usuario } = req.user;

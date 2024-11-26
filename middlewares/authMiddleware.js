@@ -8,10 +8,10 @@ const authMiddleware = async (req, res, next) => {
     }
 
     try {
-        // Verificar el token con la misma clave secreta utilizada en la firma
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY || 'mi_clave_secreta');
 
-        // Almacenar los datos del usuario en el objeto de la solicitud
+
         req.user = decoded;
 
         next();
